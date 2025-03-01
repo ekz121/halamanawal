@@ -188,8 +188,6 @@
 </head>
 <body>
     <canvas id="background-canvas"></canvas>
-    <audio id="meteor-sound" src="meteor-sound.mp3" preload="auto" autoplay></audio>
-    <audio id="flare-sound" src="flare-sound.mp3" preload="auto"></audio>
 
     <button class="show-button" id="show-button">Explore Content</button>
     <button class="expert-button" id="expert-button">Expert</button>
@@ -220,8 +218,6 @@
             contentContainer.appendChild(card);
         });
 
-        let meteorSoundInterval;
-
         // Toggle container visibility
         function toggleContainers() {
             const container = contentContainer;
@@ -231,41 +227,39 @@
                 container.classList.remove('show');
                 hideButton.classList.remove('show');
                 showButton.style.display = 'block';
-                if (meteorSoundInterval) {
-                    clearInterval(meteorSoundInterval);
-                    meteorSoundInterval = null;
-                }
             } else {
                 container.classList.add('show');
                 hideButton.classList.add('show');
                 showButton.style.display = 'none';
-                startMeteorSound();
             }
         }
 
-        // Audio elements
-        const meteorSound = document.getElementById('meteor-sound');
-        const flareSound = document.getElementById('flare-sound');
-
-        // Start meteor sound
-        function startMeteorSound() {
-            if (!meteorSoundInterval) {
-                meteorSoundInterval = setInterval(() => {
-                    meteorSound.currentTime = 0;
-                    meteorSound.play().catch(err => console.error('Meteor sound error:', err));
-                }, 1000);
-            }
-        }
-
-        // Flare effect function
+        // Flare effect function (with text fade-out)
         function triggerFlareEffect(targetUrl) {
             const canvas = document.getElementById('background-canvas');
-            flareSound.play().catch(err => console.error('Flare sound error:', err));
-            if (meteorSoundInterval) {
-                clearInterval(meteorSoundInterval);
-                meteorSoundInterval = null;
-            }
+            const contentContainer = document.getElementById('content-container');
+            const showButton = document.getElementById('show-button');
+            const hideButton = document.getElementById('hide-button');
+            const expertButton = document.getElementById('expert-button');
+
+            // Fade out all text elements by setting opacity to 0
+            contentContainer.style.transition = 'opacity 0.5s ease';
+            contentContainer.style.opacity = '0';
+
+            // Fade out the buttons
+            showButton.style.transition = 'opacity 0.5s ease';
+            hideButton.style.transition = 'opacity 0.5s ease';
+            expertButton.style.transition = 'opacity 0.5s ease';
+            
+            showButton.style.opacity = '0';
+            hideButton.style.opacity = '0';
+            expertButton.style.opacity = '0';
+
+            // Fade out the canvas background
+            canvas.style.transition = 'opacity 1s ease';
             canvas.style.opacity = '0';
+
+            // Redirect after the fade-out transition completes
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1000);
@@ -282,6 +276,10 @@
         // WebGL Background
         const canvas = document.getElementById('background-canvas');
         const gl = canvas.getContext('webgl2');
+        if (!gl) {
+            console.error('WebGL2 tidak didukung di browser ini.');
+            document.body.style.background = '#0a0a1a';
+        }
         let frm;
 
         const vertexSrc = `#version 300 es
@@ -397,11 +395,30 @@
         function init() {
             resize();
             setup();
+            canvas.style.opacity = '1';
             render(0);
             window.onresize = resize;
         }
 
         init();
+
+        // Event untuk menangani saat halaman ditampilkan kembali (misalnya tombol "Back")
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                canvas.style.opacity = '1';
+                if (!frm) {
+                    render(0);
+                }
+            }
+        });
+
+        // Hentikan animasi saat meninggalkan halaman
+        window.addEventListener('pagehide', () => {
+            if (frm) {
+                cancelAnimationFrame(frm);
+                frm = null;
+            }
+        });
     </script>
 </body>
 </html>
