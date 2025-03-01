@@ -234,32 +234,10 @@
             }
         }
 
-        // Flare effect function (with text fade-out)
+        // Flare effect function (tanpa audio)
         function triggerFlareEffect(targetUrl) {
             const canvas = document.getElementById('background-canvas');
-            const contentContainer = document.getElementById('content-container');
-            const showButton = document.getElementById('show-button');
-            const hideButton = document.getElementById('hide-button');
-            const expertButton = document.getElementById('expert-button');
-
-            // Fade out all text elements by setting opacity to 0
-            contentContainer.style.transition = 'opacity 0.5s ease';
-            contentContainer.style.opacity = '0';
-
-            // Fade out the buttons
-            showButton.style.transition = 'opacity 0.5s ease';
-            hideButton.style.transition = 'opacity 0.5s ease';
-            expertButton.style.transition = 'opacity 0.5s ease';
-            
-            showButton.style.opacity = '0';
-            hideButton.style.opacity = '0';
-            expertButton.style.opacity = '0';
-
-            // Fade out the canvas background
-            canvas.style.transition = 'opacity 1s ease';
             canvas.style.opacity = '0';
-
-            // Redirect after the fade-out transition completes
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1000);
@@ -278,7 +256,7 @@
         const gl = canvas.getContext('webgl2');
         if (!gl) {
             console.error('WebGL2 tidak didukung di browser ini.');
-            document.body.style.background = '#0a0a1a';
+            document.body.style.background = '#0a0a1a'; // Fallback background
         }
         let frm;
 
