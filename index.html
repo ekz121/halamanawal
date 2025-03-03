@@ -106,7 +106,7 @@
         .card:nth-child(2) { animation-delay: 0.2s; }
         .card:nth-child(3) { animation-delay: 0.3s; }
 
-        .show-button, .hide-button, .expert-button {
+        .show-button, .hide-button, .expert-button, .explore-language-button {
             padding: 15px 30px;
             font-size: 1.2rem;
             font-weight: 600;
@@ -165,6 +165,19 @@
             transform: scale(1.05);
         }
 
+        .explore-language-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #ff5e62, #f09819);
+            z-index: 2;
+        }
+
+        .explore-language-button:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
         @keyframes pulse {
             0% { box-shadow: 0 0 15px rgba(255, 107, 107, 0.5); }
             50% { box-shadow: 0 0 30px rgba(255, 107, 107, 0.8); }
@@ -176,7 +189,7 @@
             .card { flex-direction: column; text-align: center; }
             .card-icon { margin-bottom: 10px; }
             .show-button, .hide-button { padding: 10px 20px; font-size: 1rem; }
-            .expert-button { right: 20px; padding: 8px 16px; font-size: 14px; }
+            .expert-button, .explore-language-button { right: 20px; padding: 8px 16px; font-size: 14px; }
         }
 
         @media (max-width: 480px) {
@@ -189,10 +202,11 @@
 <body>
     <canvas id="background-canvas"></canvas>
 
-    <button class="show-button" id="show-button">Explore Content</button>
-    <button class="expert-button" id="expert-button">Expert</button>
+    <button class="show-button" id="show-button">Explore Task</button>
+    <button class="expert-button" id="expert-button">Expert Question</button>
     <div class="container" id="content-container"></div>
     <button class="hide-button" id="hide-button">Hide Content</button>
+    <button class="explore-language-button" id="explore-language-button">Explore Language</button>
 
     <script>
         // Data for dynamic cards
@@ -247,6 +261,7 @@
         document.getElementById('show-button').addEventListener('click', toggleContainers);
         document.getElementById('hide-button').addEventListener('click', toggleContainers);
         document.getElementById('expert-button').addEventListener('click', () => triggerFlareEffect('https://ekz121.github.io/comming-soon/'));
+        document.getElementById('explore-language-button').addEventListener('click', () => triggerFlareEffect('https://ekz121.github.io/comming-soon/'));
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => triggerFlareEffect(card.getAttribute('data-url')));
         });
